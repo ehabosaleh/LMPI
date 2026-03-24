@@ -1,0 +1,150 @@
+LMPI 32 nodes 32 ranks each grid size 10k
+solving time: 332681.274305
+
+Intel-MPI 32 nodes 32 ranks each grid size 10k without progress
+solving time: 104534.484872
+
+Intel-MPI 32 nodes 32 ranks each grid size 10k with progress
+solving time: 51711.076956
+
+
+===================================================
+LMPI 32 nodes 32 ranks each grid size 20k
+solving time: 433690.701494
+
+Intel-MPI 32 nodes 32 ranks each grid size 20k without progress
+solving time: 286366.315558
+
+Intel-MPI 32 nodes 32 ranks each grid size 20k with progress
+solving time: 199733.318373
+
+====================================================
+
+LMPI 32 nodes 32 ranks each grid size 30k
+solving time: 649544.508435
+
+Intel-MPI 32 nodes 32 ranks each grid size 30k without progress
+solving time: 780771.050299
+
+Intel-MPI 32 nodes 32 ranks each grid size 30k with progress
+solving time: 568161.343126
+=======================================================
+
+LMPI 32 nodes 32 ranks each grid size 40k
+solving time: 1057457.379098
+
+Intel-MPI 32 nodes 32 ranks each grid size 40k without progress
+solving time: 1313859.480146
+
+Intel-MPI 32 nodes 32 ranks each grid size 40k with progress
+solving time: 1172532.038227
+
+
+===========================================================
+
+LMPI 32 nodes 32 ranks each grid size 50k
+solving time: 1691765.139381
+
+Intel-MPI 32 nodes 32 ranks each grid size 50k without progress
+solving time: 1988380.658156
+
+Intel-MPI 32 nodes 32 ranks each grid size 50k with progress
+solving time: 1853025.688965
+
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 60k
+solving time: 2592050.546122
+
+Intel-MPI 32 nodes 32 ranks each grid size 60k without progress
+solving time: 3288513.213878
+
+Intel-MPI 32 nodes 32 ranks each grid size 60k with progress
+solving time: 2858555.160492
+
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 70k
+solving time: 3797889.185414
+
+Intel-MPI 32 nodes 32 ranks each grid size 70k without progress
+solving time: 4364839.185725
+
+Intel-MPI 32 nodes 32 ranks each grid size 70k with progress
+solving time: 3987252.235369
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 80k
+solving time: 4953724.915898
+
+Intel-MPI 32 nodes 32 ranks each grid size 80k without progress
+solving time: 5571632.195430
+
+Intel-MPI 32 nodes 32 ranks each grid size 80k with progress
+solving time: 5538388.909185
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 90k
+solving time: 6135454.373859
+
+Intel-MPI 32 nodes 32 ranks each grid size 90k without progress
+solving time: 6991459.941069
+
+Intel-MPI 32 nodes 32 ranks each grid size 90k with progress
+solving time: 7385267.198377
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 100k
+solving time: 7618273.502020
+
+Intel-MPI 32 nodes 32 ranks each grid size 100k without progress
+solving time: 8792796.342967
+
+Intel-MPI 32 nodes 32 ranks each grid size 100k with progress
+solving time: 9338653.071607
+
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 110k
+solving time: 8990916.599773
+
+Intel-MPI 32 nodes 32 ranks each grid size 110k without progress
+solving time: 10856695.734673
+
+Intel-MPI 32 nodes 32 ranks each grid size 110k with progress
+solving time: 12454255.486653
+
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 120k
+solving time: 10828544.435045
+
+Intel-MPI 32 nodes 32 ranks each grid size 120k without progress
+solving time: 12160014.925341
+
+Intel-MPI 32 nodes 32 ranks each grid size 120k with progress
+solving time: 15737925.641914
+
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 130k
+solving time: 12776933.196924
+
+Intel-MPI 32 nodes 32 ranks each grid size 130k without progress
+solving time: 14572692.499258
+
+Intel-MPI 32 nodes 32 ranks each grid size 130k with progress
+solving time: 18565610.851074
+
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 140k
+solving time: 14509243.391307
+
+Intel-MPI 32 nodes 32 ranks each grid size 140k without progress
+solving time: 16728103.925987
+
+Intel-MPI 32 nodes 32 ranks each grid size 140k with progress
+solving time: 20641818.082333
+
+===========================================================
+LMPI 32 nodes 32 ranks each grid size 150k
+solving time: 17055630.435510
+
+Intel-MPI 32 nodes 32 ranks each grid size 150k without progress
+solving time: 20144964.616456
+
+Intel-MPI 32 nodes 32 ranks each grid size 150k with progress
+solving time: 23003836.133263
+
