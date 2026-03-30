@@ -30,6 +30,6 @@ add_library(lmpi_shared SHARED $<TARGET_OBJECTS:lmpi>)
 set_target_properties(lmpi_shared PROPERTIES OUTPUT_NAME lmpi)
 target_link_libraries(lmpi_shared PUBLIC MPI::MPI_C pthread)
 
-add_executable(main examples/main.c)
+add_executable(main tests/main.c)
 target_link_libraries(main lmpi)
 
