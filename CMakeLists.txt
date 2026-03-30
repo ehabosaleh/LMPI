@@ -25,10 +25,10 @@ target_compile_features(lmpi PUBLIC c_std_11)
 target_compile_options(lmpi PRIVATE -O3 -Wall -Wextra -Wno-unused-parameter -pthread -fPIC)
 target_link_libraries(lmpi PUBLIC MPI::MPI_C pthread m)
 
-# Optional SHARED lib
 add_library(lmpi_shared SHARED $<TARGET_OBJECTS:lmpi>)
 set_target_properties(lmpi_shared PROPERTIES OUTPUT_NAME lmpi)
 target_link_libraries(lmpi_shared PUBLIC MPI::MPI_C pthread)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
 
 add_executable(main tests/main.c)
 target_link_libraries(main lmpi)
