@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --nice=0
+#SBATCH --job-name=jacobi-32
+#SBATCH --nodes=1
+#SBATCH --output=out.%j.txt
+#SBATCH --error=err.%j.txt
+#SBATCH --ntasks-per-node=37
+#SBATCH --time=00:30:00
+#SBATCH --partition=test
+#SBATCH --mail-user=ehab.saleh@lrz.de
+#SBATCH --ear=off
+
+export I_MPI_ASYNC_PROGRESS=0
+srun perf stat -e power/energy-ram/ ../build/simple.out $1
+
