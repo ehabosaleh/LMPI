@@ -70,7 +70,7 @@ int main(){
 			
 			if(rank==src){
 				total_time=(end_time/(MAX_ITERATION-SKIP));
-				bandwidth=((MAX_ITERATION-SKIP)*msg_size)/(total_time);
+				bandwidth=(msg_size)/(total_time);
 				
 				printf("%-20ld%-20.3f%-20.3f\n",msg_size,1e6*total_time,bandwidth/(1024*1024));
 				fflush(stdout);
