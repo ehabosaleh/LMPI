@@ -44,7 +44,7 @@ int LMPI_Isend(void*data, int count, MPI_Datatype datatype, int dst, int tag,  M
 	int rank=0;
         MPI_Comm_rank(comm,&rank);
         MPI_Type_size(datatype,&sizeofdata);
-        MPI_Aint remote_addr;
+        //MPI_Aint remote_addr;
 
 	MPI_Group lmpi_group, world_group;
 	int lmpi_dst=dst,lmpi_src=rank,world_dst=0,world_src=0;

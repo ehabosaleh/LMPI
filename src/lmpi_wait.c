@@ -4,7 +4,7 @@
 
 int LMPI_Wait(LMPI_Request * request,int*flag){
         *flag=0;
-        int dummy_flag=0;
+        //int dummy_flag=0;
         while(!(*flag)){
 
                 MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &dummy_flag, MPI_STATUS_IGNORE);
@@ -16,7 +16,7 @@ int LMPI_Wait(LMPI_Request * request,int*flag){
 }
 int LMPI_Test(LMPI_Request *request,int*flag){
         *flag=0;
-        int dummy_flag;
+        //int dummy_flag;
         if(shared_queue[request->index].request_status==LMPI_STATUS_COMPLETED){
                 *flag=1;
                 //shared_queue[request->index].valid=0;

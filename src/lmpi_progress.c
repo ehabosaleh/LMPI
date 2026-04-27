@@ -134,10 +134,10 @@ void* memory_copy(void *arg){
 int dequeue_request_memcpy(){
         int flag_exit=0;
         int rank=0;
-        int time_send =0,time_recv=0;
+        //int time_send =0,time_recv=0;
         int dummy_flag=0;
-        char FIN_MSG=LMPI_FIN;
-        char RTS_MSG=LMPI_RTS;
+        //char FIN_MSG=LMPI_FIN;
+        //char RTS_MSG=LMPI_RTS;
         MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 
         while(!flag_exit){
