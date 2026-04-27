@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 3.15)
 project(LRZ-MPI VERSION 1.0.0  C)
 
 find_package(MPI REQUIRED)
+if(NOT MPI_FOUND)
+	message(FATAL_ERROR "MPI not found. Install OpenMPI, MPICH or IntelMPI")
+endif()
+
 file(GLOB SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+add_library(lmpi STATIC ${SOURCES})
 
 #add_library(lmpi STATIC
 #  src/lmpi_comm.c
@@ -15,12 +20,10 @@ file(GLOB SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 #  src/lmpi_wait.c
 #)
 
-target_include_directories(lmpi
-  PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/internal
-)
+
+target_include_directories(lmpi PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(lmpi PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/internal)
+
 
 target_compile_features(lmpi PUBLIC c_std_11)
 target_compile_options(lmpi PRIVATE -O3 -Wall -Wextra -Wno-unused-parameter -pthread -fPIC)
