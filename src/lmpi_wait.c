@@ -1,10 +1,11 @@
 #include <string.h>
 #include "lmpi.h"
 #include "internal/lmpi_globals.h"
+#define UNUSED(x) ((void)(x))
 
 int LMPI_Wait(LMPI_Request * request,int*flag){
         *flag=0;
-        //int dummy_flag=0;
+        int dummy_flag=0;
         while(!(*flag)){
 
                 MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &dummy_flag, MPI_STATUS_IGNORE);
@@ -12,7 +13,8 @@ int LMPI_Wait(LMPI_Request * request,int*flag){
 
         }
         *flag=1;
-        return 0;
+        UNUSED(dummy_flag);
+	return 0;
 }
 int LMPI_Test(LMPI_Request *request,int*flag){
         *flag=0;
@@ -31,13 +33,14 @@ int LMPI_Test(LMPI_Request *request,int*flag){
                 return 0;
         }
         else{
+	UNUSED(dummy_flag);
         *flag=0;
          return 1;
         }
 }
 
 int LMPI_Testall(int count, LMPI_Request array_of_requests[],int *flag){
-        int dummy_flag=0;
+        //int dummy_flag=0;
         int complete_requests=0;
 	MPI_Win_sync(shm_queue_win);
 	for(int i=0;i<count;i++)
@@ -74,5 +77,6 @@ int LMPI_Waitall(int count, LMPI_Request array_of_requests[],int *flag){
                 MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &dummy_flag, MPI_STATUS_IGNORE);
                 LMPI_Testall(count,array_of_requests,flag);
         }
+	UNUSED(dummy_flag);
         return 0;
 }
