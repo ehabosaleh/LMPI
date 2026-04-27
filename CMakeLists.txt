@@ -10,6 +10,7 @@ endif()
 
 # file(GLOB SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 # add_library(lmpi SHARED ${SOURCES})
+set_source_files_properties(src/lmpi_progress.c PROPERTIES COMPILE_OPTIONS "-Wno-restrict")
 
 add_library(lmpi STATIC
   src/lmpi_comm.c
