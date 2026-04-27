@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 3.15)
-project(LRZ-MPI C)
+project(LRZ-MPI VERSION 1.0.0  C)
 
 find_package(MPI REQUIRED)
+file(GLOB SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
-add_library(lmpi STATIC
-  src/lmpi_comm.c
-  src/lmpi_globals.c
-  src/lmpi_init.c
-  src/lmpi_memory.c
-  src/lmpi_progress.c
-  src/lmpi_queue.c
-  src/lmpi_sendrecv.c
-  src/lmpi_wait.c
-)
+#add_library(lmpi STATIC
+#  src/lmpi_comm.c
+#  src/lmpi_globals.c
+#  src/lmpi_init.c
+#  src/lmpi_memory.c
+#  src/lmpi_progress.c
+#  src/lmpi_queue.c
+#  src/lmpi_sendrecv.c
+#  src/lmpi_wait.c
+#)
 
 target_include_directories(lmpi
   PUBLIC
