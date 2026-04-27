@@ -43,7 +43,7 @@ install(TARGETS lmpi
 	INCLUDES DESTINATION include
 )
 
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/lmpi.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 
 install(EXPORT lmpi_target
 	FILE lmpi_target.cmake
