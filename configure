@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+
+if [ -d "$PWD/build" ]; then
+    rm -rf "$PWD/build"
+fi
+
+PREFIX="/usr/local/lmpi"
+BUILD_DIR="build"
+
+for arg in "$@"; do
+    case $arg in
+        --prefix=*)
+            PREFIX="${arg#*=}"
+            ;;
+        --help)
+            echo "Usage: ./configure [--prefix=PATH]"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $arg"
+            exit 1
+            ;;
+    esac
+done
+
+mkdir -p "$BUILD_DIR"
+
+echo "Configuring project with:"
+echo "  Install Dir: $PREFIX"
+
+cmake -S . -B "$BUILD_DIR" -DCMAKE_INSTALL_PREFIX="$PREFIX"
+cmake --build "$BUILD_DIR" &&
+cmake --install "$BUILD_DIR"
+
+
