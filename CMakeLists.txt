@@ -80,6 +80,7 @@ add_test(
     COMMAND
         ${MPIEXEC_EXECUTABLE}
         ${MPIEXEC_NUMPROC_FLAG} 4
+	${MPIEXEC_PREFLAGS} --oversubscribe
         ${MPIEXEC_PREFLAGS}
         $<TARGET_FILE:overlap_test>
         ${MPIEXEC_POSTFLAGS}
