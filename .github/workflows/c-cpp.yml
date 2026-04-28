@@ -25,4 +25,4 @@ jobs:
       run: ./configure --prefix=$HOME/lmpi_install
 
     - name: Ctest
-     run: ctest --test-dir build --output-on-failure
+      run: ctest --test-dir build --output-on-failure
