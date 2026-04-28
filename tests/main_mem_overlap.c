@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "lmpi.h"
 #include <math.h>
 #include <unistd.h>
+#include<lmpi.h>
+
 #define MAX_MSG_SIZE (1<<28)
 #define MIN_MSG_SIZE (1<<20)
 

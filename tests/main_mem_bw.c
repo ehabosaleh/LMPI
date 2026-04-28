@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<time.h>
 #include<unistd.h>
-#include"lmpi.h"
+#include<lmpi.h>
 
 #define MAX_MSG_SIZE (1ULL << 28)
 #define MIN_MSG_SIZE (1ULL << 20)
