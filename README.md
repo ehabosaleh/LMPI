@@ -89,4 +89,34 @@ int main(void){
 }
 
 ```
+---
+## Build and Install
+You can simple run the bash script `configure` and pass the path where you want to install the libray and the header file:
+
+```bash
+Usage: ./configure [--prefix=INSTALLATION_PATH]
+```
+**Or**
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+and then nstall:
+
+```bash
+cmake --install build
+```
+the libray will be installed in the default path `/usr/local/lmpi`
+
+---
+
+## Use in Other Projects
+
+With CMake:
+
+```cmake
+find_package(LMPI REQUIRED)
+target_link_libraries(app PRIVATE LMPI::LMPI)
+```
 
