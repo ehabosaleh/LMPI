@@ -24,7 +24,7 @@ jobs:
 
     - name: Build and install
       run: ./configure --prefix=$HOME/lmpi_install
-    # - name: Ctest
-    #   run: ctest --test-dir build --output-on-failure
+   - name: Ctest
+       run: ctest --test-dir build --output-on-failure
     # - name: run test
     #  run: ./build/rapl_test
