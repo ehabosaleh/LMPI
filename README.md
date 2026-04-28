@@ -58,23 +58,22 @@ Neither function performs communication or advances progress. They rely entirely
 #include <lmpi.h>
 
 int main(void){
-	
 	LMPI_Init(NULL, NULL);
-    	int rank, size;
-    	LMPI_Comm_rank(LMPI_COMM_WORLD, &rank);
-    	LMPI_Comm_size(LMPI_COMM_WORLD, &size);
-	
+	int rank, size;
+	LMPI_Comm_rank(LMPI_COMM_WORLD, &rank);
+	LMPI_Comm_size(LMPI_COMM_WORLD, &size);
+
 	LMPI_Request req;
 	int flag = 0;
-	
-    	if (rank == 0){
-        	int *send_buf=(int*)LMPI_Register(1,LMPI_INT);
+
+	if (rank == 0){
+			int *send_buf=(int*)LMPI_Register(1,LMPI_INT);
         	*send_buf=42;
 
         	LMPI_Isend(send_buf, 1, LMPI_INT, 1, 0, LMPI_COMM_WORLD, &req);
-		/*can overlap with CPU computation here*/
-		LMPI_Wait(&req, &flag);
-		}else{
+			/*can overlap with CPU computation here*/
+			LMPI_Wait(&req, &flag);
+	}else{
         	int *recv_buf=NULL;
         	LMPI_Irecv((void**)&recv_buf, 0, LMPI_INT, 0, 0, LMPI_COMM_WORLD, &req);
         	/*can overlap with CPU computation here*/
@@ -82,10 +81,10 @@ int main(void){
 
         	printf("Received value = %d\n", *recv_buf);
     	}
-	
-		LMPI_Barrier(LMPI_COMM_WORLD);
-    	LMPI_Finalize();
-    	return 0;
+
+	LMPI_Barrier(LMPI_COMM_WORLD);
+	LMPI_Finalize();
+	return 0;
 }
 
 ```
