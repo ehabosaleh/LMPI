@@ -70,3 +70,17 @@ install(FILES
     	${CMAKE_CURRENT_BINARY_DIR}/LMPIConfigVersion.cmake
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lmpi
 )
+
+
+enable_testing()
+add_executable(overlap_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/examples/main_mem_overlap.c )
+target_link_libraries(overlap_test PRIVATE LMPI::LMPI)
+add_test(
+    NAME test_lmpi_overlap
+    COMMAND
+        ${MPIEXEC_EXECUTABLE}
+        ${MPIEXEC_NUMPROC_FLAG} 4
+        ${MPIEXEC_PREFLAGS}
+        $<TARGET_FILE:overlap_test>
+        ${MPIEXEC_POSTFLAGS}
+)
