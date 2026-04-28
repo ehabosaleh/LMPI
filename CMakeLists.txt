@@ -12,7 +12,7 @@ endif()
 # add_library(lmpi SHARED ${SOURCES})
 set_source_files_properties(src/lmpi_progress.c PROPERTIES COMPILE_OPTIONS "-Wno-restrict")
 
-add_library(lmpi STATIC
+add_library(LMPI STATIC
   src/lmpi_comm.c
   src/lmpi_globals.c
   src/lmpi_init.c
@@ -24,19 +24,19 @@ add_library(lmpi STATIC
 )
 
 
-target_include_directories(lmpi PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
-target_include_directories(lmpi PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/internal)
+target_include_directories(LMPI PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(LMPI PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/internal)
 
 
-target_compile_features(lmpi PUBLIC c_std_11)
-target_compile_options(lmpi PRIVATE -O3 -Wall -Wextra -Wno-unused-parameter -pthread -fPIC)
-target_link_libraries(lmpi PUBLIC MPI::MPI_C pthread m)
+target_compile_features(LMPI PUBLIC c_std_11)
+target_compile_options(LMPI PRIVATE -O3 -Wall -Wextra -Wno-unused-parameter -pthread -fPIC)
+target_link_libraries(LMPI PUBLIC MPI::MPI_C pthread m)
 
-add_library(lmpi::lmpi ALIAS lmpi)
+add_library(LMPI::LMPI ALIAS LMPI)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
 
-install(TARGETS lmpi 
+install(TARGETS LMPI 
 	EXPORT lmpi_target
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -47,7 +47,26 @@ install(TARGETS lmpi
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/lmpi.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 
 install(EXPORT lmpi_target
-	FILE lmpi_target.cmake
-	NAMESPACE lmpi::
-	DESTINATION lib/cmake/lmpi
+	FILE LMPITargets.cmake
+	NAMESPACE LMPI::
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lmpi
+)
+
+
+write_basic_package_version_file(
+	LMPIConfigVersion.cmake
+    	VERSION ${PROJECT_VERSION}
+    	COMPATIBILITY SameMajorVersion
+)
+
+configure_package_config_file(
+	cmake/LMPIConfig.cmake.in
+    	LMPIConfig.cmake
+    	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lmpi
+)
+
+install(FILES 
+	${CMAKE_CURRENT_BINARY_DIR}/LMPIConfig.cmake
+    	${CMAKE_CURRENT_BINARY_DIR}/LMPIConfigVersion.cmake
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lmpi
 )
