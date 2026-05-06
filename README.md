@@ -9,12 +9,11 @@ Users can access all library functions declared in `lmpi.h`. Their signatures fo
 The primary library functions are as follows:
 * `int LMPI_Init(int *argc,char***argv)`:
 	It initializes the LMPI runtime by setting up a **proxy-based communication model** with a dedicated progress rank. It performs the following:
-
-		 - Splits processes into **node-local communicators** and assigns **working ranks** and a **progress rank**.
-         - Allocates **shared memory regions** for send/receive buffers.
-		 - Initializes a **shared request queue** for communication operations.
-		 - Maps memory so the progress rank can access all local buffers.
-		 - Starts the **progress engine**, which continuously processes requests and performs data transfers.
+  	* Splits processes into **node-local communicators** and assigns **working ranks** and a **progress rank**.
+  	* Allocates **shared memory regions** for send/receive buffers.
+	* Initializes a **shared request queue** for communication operations.
+	* Maps memory so the progress rank can access all local buffers.
+	* Starts the **progress engine**, which continuously processes requests and performs data transfers.
 
 * `void* LMPI_Register(int count, LMPI_Datatype datatype)` allocates a buffer inside the **pre-allocated shared memory send segment** of a working rank. The corresponding funtionality of the receiver is embeded into `LMPI_Irecv`.
 
