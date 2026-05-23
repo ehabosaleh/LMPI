@@ -4,7 +4,7 @@
 #include<mpi.h>
 #include<stdint.h>
 #include <stdatomic.h>
-
+#include <stddef.h>
 typedef MPI_Comm	LMPI_Comm;
 typedef MPI_Datatype	LMPI_Datatype;
 typedef MPI_Win		LMPI_Win;
