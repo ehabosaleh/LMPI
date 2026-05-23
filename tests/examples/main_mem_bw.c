@@ -35,12 +35,10 @@ int main(){
 			int flag=0;
 			flag=0;
 			
-			char*buffer_send=LMPI_Register(msg_size,MPI_CHAR);
-			char*buffer_recv=NULL;
-			
-			for(int i=0;i<msg_size;i++)
-				*(buffer_send+i)='a';
-			
+			LMPI_Allocation buffer_send=LMPI_Malloc(LMPI_POOL_SEND,msg_size,MPI_CHAR);
+			LMPI_Allocation buffer_recv=LMPI_Malloc(LMPI_POOL_RECV,msg_size,MPI_CHAR);
+            memset(buffer_send.ptr, 'a', msg_size);
+
 			count++;
 			for(iter=0;iter<MAX_ITERATION;iter++){
 				
@@ -49,7 +47,7 @@ int main(){
 					LMPI_Request requests[2];
 					start_time=MPI_Wtime();
 					
-					LMPI_Isend(buffer_send, msg_size, MPI_CHAR, dst, count+iter+100, LMPI_COMM_WORLD, &requests[0]);
+					LMPI_Isend(&buffer_send, msg_size, MPI_CHAR, dst, count+iter+100, LMPI_COMM_WORLD, &requests[0]);
 					
 					LMPI_Waitall(1,&requests[0],&flag);
 					
@@ -61,12 +59,12 @@ int main(){
 					LMPI_Request requests[2];
 					flag=0;
 					
-					LMPI_Irecv((void**)&buffer_recv,msg_size,MPI_CHAR,src,count+iter+100,LMPI_COMM_WORLD,&requests[0]);
+					LMPI_Irecv(&buffer_recv,msg_size,MPI_CHAR,src,count+iter+100,LMPI_COMM_WORLD,&requests[0]);
 					LMPI_Waitall(1,&requests[0],&flag);
 				}
 
 				LMPI_Barrier(LMPI_COMM_WORLD);
-			}
+            }
 			
 			if(rank==src){
 				total_time=(end_time/(MAX_ITERATION-SKIP));
@@ -80,7 +78,9 @@ int main(){
 			}
 			//free(buffer_send);
 			//free(buffer_recv);
-			MPI_Barrier(LMPI_COMM_WORLD);
+			LMPI_Free(&buffer_send);
+            LMPI_Free(&buffer_recv);
+            MPI_Barrier(LMPI_COMM_WORLD);
 		}
 	
 	LMPI_Barrier(LMPI_COMM_WORLD);
