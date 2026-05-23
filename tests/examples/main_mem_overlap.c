@@ -86,86 +86,82 @@ int main(){
     int count=0;
     
     if(rank==src||rank==dst)
-    	for(long  msg_size=MIN_MSG_SIZE;msg_size<=MAX_MSG_SIZE;msg_size*=2){
-		count++;
-	    	char*buffer_send=LMPI_Register(msg_size,MPI_CHAR);
- 		char*buffer_recv=NULL;
+        for(long  msg_size=MIN_MSG_SIZE;msg_size<=MAX_MSG_SIZE;msg_size*=2){
+		    count++;
+	        LMPI_Allocation buffer_send=LMPI_Malloc(LMPI_POOL_SEND,msg_size,MPI_CHAR);
+ 		    LMPI_Allocation buffer_recv=LMPI_Malloc(LMPI_POOL_RECV,msg_size,MPI_CHAR);
+            memset(buffer_send.ptr,'a',msg_size);
+            double total_comm_time=0;
+            double total_comp_time=0;
+            double total_time=0;
 
-        	for(int i=0;i<msg_size;i++)
-			buffer_send[i]='a';
+            for(int iter=0;iter<MAX_ITERATION;iter++){
+                LMPI_Request request[2];
+                int flag=0;
+			    double start_time,end_time;
 
-        	double total_comm_time=0;
-        	double total_comp_time=0;
-        	double total_time=0;
-
-        	for(int iter=0;iter<MAX_ITERATION;iter++){
-            		LMPI_Request request[2];
-            		int flag=0;
-			double start_time,end_time;
-
-            		if(rank==src){
-                		start_time=MPI_Wtime();
-                
-				LMPI_Isend(buffer_send, msg_size, MPI_CHAR, dst, count+iter+100, LMPI_COMM_WORLD, &request[0]);
-                		LMPI_Irecv((void**)&buffer_recv,msg_size,MPI_CHAR,dst,iter,LMPI_COMM_WORLD,&request[1]);	
+                if(rank==src){
+                    start_time=MPI_Wtime();
+                    LMPI_Isend(&buffer_send, msg_size, MPI_CHAR, dst, count+iter+100, LMPI_COMM_WORLD, &request[0]);
+                    LMPI_Irecv(&buffer_recv,msg_size,MPI_CHAR,dst,iter,LMPI_COMM_WORLD,&request[1]);	
 				
 				//LMPI_Wait( &request[0],&flag);
-				LMPI_Waitall(2,request,&flag);
-                		if(iter>100)
-					total_comm_time+=MPI_Wtime()-start_time;
-			}
-	    		else if(rank==dst){
-            			start_time=MPI_Wtime();
-				LMPI_Irecv((void**)&buffer_recv,msg_size,MPI_CHAR,src,count+iter+100,LMPI_COMM_WORLD,&request[0]);
-                		LMPI_Isend(buffer_send, msg_size, MPI_CHAR,src, iter, LMPI_COMM_WORLD, &request[1]);
+				    LMPI_Waitall(2,request,&flag);
+                    if(iter>100)
+				        total_comm_time+=MPI_Wtime()-start_time;
+			    }
+	    	    else if(rank==dst){
+                    start_time=MPI_Wtime();
+				    LMPI_Irecv(&buffer_recv,msg_size,MPI_CHAR,src,count+iter+100,LMPI_COMM_WORLD,&request[0]);
+                    LMPI_Isend(&buffer_send, msg_size, MPI_CHAR,src, iter, LMPI_COMM_WORLD, &request[1]);
 				
 				//LMPI_Wait( &request[0],&flag);
-				LMPI_Waitall(2,request,&flag);
+				    LMPI_Waitall(2,request,&flag);
 				
-				if(iter>100)
-                                        total_comm_time+=MPI_Wtime()-start_time;
+				    if(iter>100)
+                        total_comm_time+=MPI_Wtime()-start_time;
 
-	    		}
+	    	    }
+            }
 
-        	}
+            total_comm_time/=(MAX_ITERATION-100);
 
-        	total_comm_time/=(MAX_ITERATION-100);
+            for(int iter=0;iter<MAX_ITERATION;iter++){
+                LMPI_Request request[2];
+                double start_time,start_comp,end_comp;
+			    int flag=0;
+                if(rank==src){
+                    start_time=MPI_Wtime();
+				    LMPI_Isend(&buffer_send, msg_size, MPI_CHAR, dst, count+iter+100, LMPI_COMM_WORLD, &request[0]);
+                    LMPI_Irecv(&buffer_recv,msg_size,MPI_CHAR,dst,iter,LMPI_COMM_WORLD,&request[1]);
 
-        	for(int iter=0;iter<MAX_ITERATION;iter++){
-            		LMPI_Request request[2];
-            		double start_time,start_comp,end_comp;
-			int flag=0;
-            		if(rank==src){
-                		start_time=MPI_Wtime();
-				LMPI_Isend(buffer_send, msg_size, MPI_CHAR, dst, count+iter+100, LMPI_COMM_WORLD, &request[0]);
-                		LMPI_Irecv((void**)&buffer_recv,msg_size,MPI_CHAR,dst,iter,LMPI_COMM_WORLD,&request[1]);
+				    start_comp=MPI_Wtime();
+                    compute_on_host(total_comm_time);
+                    end_comp=MPI_Wtime();
+				    //LMPI_Wait( &request[0],&flag);
 
-				start_comp=MPI_Wtime();
-                		compute_on_host(total_comm_time);
-                		end_comp=MPI_Wtime();
-				//LMPI_Wait( &request[0],&flag);
-
-				LMPI_Waitall(2,request,&flag);	
+				    LMPI_Waitall(2,request,&flag);	
 				
-				if(iter>100){
-					 total_time+=MPI_Wtime()-start_time;
-					 total_comp_time+=end_comp-start_comp;
-                		}
-				/*
-				double time_1=MPI_Wtime();
-				LMPI_Waitall(2,request,&flag);
-				double time_2=MPI_Wtime()-time_1;
-				printf("time iin us %f\n",time_2*1e6);
-            			*/
-			}else if(rank==dst){
-				LMPI_Irecv((void**)&buffer_recv,msg_size,MPI_CHAR,src,count+iter+100,LMPI_COMM_WORLD,&request[0]);
-                        	LMPI_Isend(buffer_send, msg_size, MPI_CHAR,src, iter, LMPI_COMM_WORLD, &request[1]);
-				compute_on_host(total_comm_time);
+				    if(iter>100){
+                        total_time+=MPI_Wtime()-start_time;
+                        total_comp_time+=end_comp-start_comp;
+                    }
 
-				//LMPI_Wait( &request[0],&flag);
-				LMPI_Waitall(2,request,&flag);		
-			}
-	
+				    /*
+				    double time_1=MPI_Wtime();
+				    LMPI_Waitall(2,request,&flag);
+				    double time_2=MPI_Wtime()-time_1;
+				    printf("time iin us %f\n",time_2*1e6);
+            		*/
+
+			    }else if(rank==dst){
+				    LMPI_Irecv(&buffer_recv,msg_size,MPI_CHAR,src,count+iter+100,LMPI_COMM_WORLD,&request[0]);
+                    LMPI_Isend(&buffer_send, msg_size, MPI_CHAR,src, iter, LMPI_COMM_WORLD, &request[1]);
+				    compute_on_host(total_comm_time);
+
+				    //LMPI_Wait( &request[0],&flag);
+				    LMPI_Waitall(2,request,&flag);		
+			    }
         }
 
         if(rank==src){
@@ -176,8 +172,9 @@ int main(){
 
             printf("%-20lu%-20.3f%-20.3f%-20.3f%-20.3f\n",msg_size,overall_comp_t,comm_us,overall_t,overlap);
             fflush(stdout);
-
         }
+        LMPI_Free(&buffer_send);
+        LMPI_Free(&buffer_recv);
 
     }
 
