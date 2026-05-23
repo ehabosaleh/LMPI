@@ -17,7 +17,7 @@ MPI_Aint LMPI_Alloc(int count,MPI_Datatype datatype)
     }
 
     MPI_Aint allocated_offset=shm_offset_recv;
-    //shm_offset_recv+=size;
+    shm_offset_recv+=size;
 
     return allocated_offset;
 }
