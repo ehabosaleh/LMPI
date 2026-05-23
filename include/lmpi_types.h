@@ -25,54 +25,59 @@ typedef MPI_Win		LMPI_Win;
 #define LMPI_Aint	MPI_Aint
 
 typedef struct{
-        int src;
-        int dst;
-        int tag;
-        long index;
-        LMPI_Datatype datatype;
-        int count;
-        int size;
-        _Atomic int valid;
-        int opcode;
-        int corresponding_progress_rank;
-        LMPI_Comm communicator;
-        LMPI_Aint mem_offset;
+    int src;
+    int dst;
+    int tag;
+    long index;
+    LMPI_Datatype datatype;
+    int count;
+    int size;
+    _Atomic int valid;
+    int opcode;
+    int corresponding_progress_rank;
+    LMPI_Comm communicator;
+    LMPI_Aint mem_offset;
 	MPI_Aint remote_win_addr;
-        int request_status;
-        void *send_buffer;
-        void *recv_buffer;
-        LMPI_Win shm_win;
-        MPI_Request request;
-        MPI_Request rts_send_request;
-        MPI_Request rts_recv_request;
-        MPI_Request fin_send_request;
-        MPI_Request fin_recv_request;
-        int rts_complete;
-        int rget_complete;
-        int fin_complete;
-        int local_rank;
+    int request_status;
+    void *send_buffer;
+    void *recv_buffer;
+    LMPI_Win shm_win;
+    MPI_Request request;
+    MPI_Request rts_send_request;
+    MPI_Request rts_recv_request;
+    MPI_Request fin_send_request;
+    MPI_Request fin_recv_request;
+    int rts_complete;
+    int rget_complete;
+    int fin_complete;
+    int local_rank;
 	int shm_queue_sender_id;
-        int world_src;
-        uint64_t request_id;
+    int world_src;
+    uint64_t request_id;
 }LMPI_Request;
 
 typedef struct{
-        void *dst_mem_addr;
-        void *src_mem_addr;
-        LMPI_Request *src_request;
-        LMPI_Request *dst_request;
+    void *dst_mem_addr;
+    void *src_mem_addr;
+    LMPI_Request *src_request;
+    LMPI_Request *dst_request;
 
 }LMPI_Mem;
 
-typedef struct {
-        LMPI_PoolKind pool;
-        size_t offset;
-        size_t size;
-} LMPI_Block;
+typedef enum {
+    LMPI_POOL_SEND=0,
+    LMPI_POOL_RECV=1
+}LMPI_PoolKind;
 
 typedef struct {
-        void *ptr;
-        LMPI_Block block;
-} LMPI_Allocation;
+    LMPI_PoolKind pool;
+    size_t offset;
+    size_t size;
+}LMPI_Block;
+
+typedef struct {
+    void *ptr;
+    LMPI_Block block;
+}LMPI_Allocation;
 
 #endif
