@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(LRZ-MPI VERSION 1.0.0 LANGUAGES  C)
+project(LRZ-MPI VERSION 2.0.0 LANGUAGES  C)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
@@ -73,15 +73,15 @@ install(FILES
 
 
 enable_testing()
-add_executable(overlap_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/examples/main_mem_overlap.c )
-target_link_libraries(overlap_test PRIVATE LMPI::LMPI)
+add_executable(basic_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/examples/main_basic.c )
+target_link_libraries(basic_test PRIVATE LMPI::LMPI)
 add_test(
-    NAME test_lmpi_overlap
+    NAME basic_test
     COMMAND
         ${MPIEXEC_EXECUTABLE}
         ${MPIEXEC_NUMPROC_FLAG} 4
 	${MPIEXEC_PREFLAGS} --oversubscribe
         ${MPIEXEC_PREFLAGS}
-        $<TARGET_FILE:overlap_test>
+        $<TARGET_FILE:basic_test>
         ${MPIEXEC_POSTFLAGS}
 )
