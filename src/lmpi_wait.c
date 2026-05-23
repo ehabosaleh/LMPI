@@ -4,7 +4,7 @@
 #define UNUSED(x) ((void)(x))
 
 int LMPI_Wait(LMPI_Request * request,int*flag){
-        *flag=0;
+	*flag=0;
         int dummy_flag=0;
         while(!(*flag)){
 
@@ -23,9 +23,9 @@ int LMPI_Test(LMPI_Request *request,int*flag){
                 *flag=1;
                 //shared_queue[request->index].valid=0;
                 atomic_store_explicit(&shared_queue[request->index].valid, SLOT_EMPTY, memory_order_release);
-                 if(request->opcode==LMPI_SEND_OP){
+                if(request->opcode==LMPI_SEND_OP){
                                         //MPI_Win_detach(win,request->send_buffer);//Used only with one-sided progress rank
-                                }
+                }
 
 		memset(&shared_queue[request->index],0,sizeof(LMPI_Request));
                 MPI_Win_sync(shm_queue_win);
@@ -33,9 +33,9 @@ int LMPI_Test(LMPI_Request *request,int*flag){
                 return 0;
         }
         else{
-	UNUSED(dummy_flag);
-        *flag=0;
-         return 1;
+		UNUSED(dummy_flag);
+        	*flag=0;
+         	return 1;
         }
 }
 
@@ -68,7 +68,7 @@ int LMPI_Testall(int count, LMPI_Request array_of_requests[],int *flag){
         }
         else
                 return 1;
-        }
+}
 
 int LMPI_Waitall(int count, LMPI_Request array_of_requests[],int *flag){
         *flag=0;
