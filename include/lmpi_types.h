@@ -64,4 +64,15 @@ typedef struct{
 
 }LMPI_Mem;
 
+typedef struct {
+        LMPI_PoolKind pool;
+        size_t offset;
+        size_t size;
+} LMPI_Block;
+
+typedef struct {
+        void *ptr;
+        LMPI_Block block;
+} LMPI_Allocation;
+
 #endif
