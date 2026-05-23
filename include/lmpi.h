@@ -19,7 +19,7 @@ int LMPI_Isend(void*data, int count, MPI_Datatype datatype, int dest, int tag,  
 
 int LMPI_Irecv(void **data, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, LMPI_Request *request);
 
-void* LMPI_Register(int count, MPI_Datatype datatype);
+void *LMPI_Malloc(LMPI_PoolKind pool,int count,MPI_Datatype datatype);
 
 int LMPI_Wait(LMPI_Request *request,int *flag);
 int LMPI_Test(LMPI_Request *request,int*flag);
