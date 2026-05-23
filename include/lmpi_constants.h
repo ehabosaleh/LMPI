@@ -62,9 +62,5 @@ enum {
     LMPI_RTS='r'
 };
 
-enum {
-    LMPI_POOL_SEND=0,
-    LMPI_POOL_RECV=1
-}LMPI_PoolKind;
 #endif
 
