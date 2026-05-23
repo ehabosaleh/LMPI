@@ -36,7 +36,7 @@ void* LMPI_Register(int count,MPI_Datatype datatype) {
         }
 
         void* ptr=(char*)shm_buf_send[local_rank]+shm_offset_send;
-        //shm_offset_send+=size;
+        shm_offset_send+=size;
         //MPI_Win_sync(shm_win_send);
         return ptr;
 }
