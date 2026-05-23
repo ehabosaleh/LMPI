@@ -49,7 +49,7 @@ int LMPI_Irecv(LMPI_Allocation *data, int count, MPI_Datatype datatype, int sour
 
 }
 
-int LMPI_Isend(LMPI_Allocation*data, int count, MPI_Datatype datatype, int dst, int tag,  MPI_Comm comm, LMPI_Request *requesti){
+int LMPI_Isend(LMPI_Allocation*data, int count, MPI_Datatype datatype, int dst, int tag,  MPI_Comm comm, LMPI_Request *request){
 	if(data==NULL||data->ptr==NULL||request==NULL){
         	fprintf(stderr, "LMPI_Isend: invalid argument\n");
         	return -1;
