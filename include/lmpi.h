@@ -19,7 +19,7 @@ int LMPI_Isend(LMPI_Allocation *data, int count, MPI_Datatype datatype, int dest
 
 int LMPI_Irecv(LMPI_Allocation *data, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, LMPI_Request *request);
 
-void *LMPI_Malloc(LMPI_PoolKind pool,int count,MPI_Datatype datatype);
+LMPI_Allocation LMPI_Malloc(LMPI_PoolKind pool,int count,MPI_Datatype datatype);
 void LMPI_Free(LMPI_Allocation*alloc);
 
 int LMPI_Wait(LMPI_Request *request,int *flag);
