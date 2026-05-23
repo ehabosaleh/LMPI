@@ -18,18 +18,18 @@ static inline int tag_rts(int user_tag){
 
 
 int get_progress_rank(){
-
-        Fabric_info p_info;
-        FILE *pf = popen("lstopo --cpuset | grep '(Fabric)' | grep PCI | awk '{print \"0000:\" $2}'", "r");
-         	if (!pf) {
-                        perror("popen failed");
-                        return LMPI_ERR_SYS_COMMAND;
-                }
-                if (!fgets(p_info.pci_number, sizeof(p_info.pci_number), pf)) {
-                	perror("fgets failed");
-                	pclose(pf);
+	Fabric_info p_info;
+        
+	FILE *pf = popen("lstopo --cpuset | grep '(Fabric)' | grep PCI | awk '{print \"0000:\" $2}'", "r");
+        if (!pf) {
+		perror("popen failed");
+                return LMPI_ERR_SYS_COMMAND;
+        }
+	if (!fgets(p_info.pci_number, sizeof(p_info.pci_number), pf)) {
+                perror("fgets failed");
+                pclose(pf);
                 return LMPI_ERR_FILE_EXISTS;
-                }
+        }
 
         pclose(pf);
 
@@ -44,13 +44,10 @@ int get_progress_rank(){
         unsigned domain = 0, bus = 0, dev = 0, func = 0;
 
         if (sscanf(p_info.pci_number, "%x:%x:%x.%x", &domain, &bus, &dev, &func) != 4) {
-
-            if (sscanf(p_info.pci_number, "%x:%x.%x", &bus, &dev, &func) != 3) {
-                fprintf(stderr, "Invalid PCI format: %s\n", p_info.pci_number);
-                return LMPI_ERR_FILE_EXISTS;
-
-            }
-
+		if (sscanf(p_info.pci_number, "%x:%x.%x", &bus, &dev, &func) != 3) {
+                	fprintf(stderr, "Invalid PCI format: %s\n", p_info.pci_number);
+                	return LMPI_ERR_FILE_EXISTS;
+            	}
         }
 
         #ifdef __linux__
@@ -78,7 +75,7 @@ int get_progress_rank(){
 
         pf = popen(p_info.numa_command, "r");
         if(!pf){
-                perror("popen faild");
+		perror("popen faild");
         	return LMPI_ERR_SYS_COMMAND;
 	}
 
@@ -94,7 +91,7 @@ int get_progress_rank(){
         pf = popen(p_info.cpuset_command, "r");
         if(!pf){
                 perror("popen faild");
-		 return LMPI_ERR_SYS_COMMAND;
+		return LMPI_ERR_SYS_COMMAND;
         }
         if(!fgets(p_info.numa_cores, sizeof(p_info.numa_cores), pf)){
                 perror("fgets faild");
@@ -113,7 +110,7 @@ int get_progress_rank(){
 
 
 void* memory_copy(void *arg){
-        LMPI_Mem *mem_data=(LMPI_Mem*)arg;
+	LMPI_Mem *mem_data=(LMPI_Mem*)arg;
         int typesize;
         MPI_Type_size(mem_data->src_request->datatype, &typesize);
 
