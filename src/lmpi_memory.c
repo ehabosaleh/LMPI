@@ -4,7 +4,7 @@
 #include "lmpi.h"
 
 
-void* LMPI_Alloc(LMPI_PoolKind pool,int count,MPI_Datatype datatype) {
+void* LMPI_Malloc(LMPI_PoolKind pool,int count,MPI_Datatype datatype) {
 
         int typesize;
         MPI_Type_size(datatype, &typesize);
