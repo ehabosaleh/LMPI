@@ -8,6 +8,7 @@ Users can access all library functions declared in `lmpi.h`. Their signatures fo
 
 The primary library functions are as follows:
 * `int LMPI_Init(int *argc,char***argv)`:
+  
 	It initializes the LMPI runtime by setting up a **proxy-based communication model** with a dedicated progress rank. It performs the following:
   	* Splits processes into **node-local communicators** and assigns **working ranks** and a **progress rank**.
   	* Allocates **shared memory regions** for send/receive buffers.
@@ -15,12 +16,19 @@ The primary library functions are as follows:
 	* Maps memory so the progress rank can access all local buffers.
 	* Starts the **progress engine**, which continuously processes requests and performs data transfers.
 
-* `void* LMPI_Register(int count, LMPI_Datatype datatype)`:
+* `LMPI_Allocation LMPI_Malloc(LMPI_PoolKind pool, int count, LMPI_Datatype datatype)`:
+  
+  This routine allocates a buffer from one of LMPI's internal memory pools. The target pool is selected through the `pool` argument, which can be either `LMPI_POOL_SEND` or `LMPI_POOL_RECV`. The allocated buffer size is computed as `count` multiplied by the size of `datatype`, as obtained from the corresponding LMPI/MPI datatype-size routine.
 
-   It allocates a buffer inside the **pre-allocated shared memory send segment** of a working rank. The corresponding funtionality of the receiver is embeded into `LMPI_Irecv`.
+	The function returns an object of type `LMPI_Allocation`, which stores both the allocated address and the metadata required to manage the allocation. This metadata typically includes:
+	* `ptr`: the base address of the allocated buffer.
+	* `pool`: the memory pool from which the buffer was allocated, i.e., send or receive pool.
+	* `offset`: the offset of the allocated buffer relative to the base address of the corresponding memory pool.
+	* `size`: the total size, in bytes, of the allocated buffer.
 
- 
-* `int LMPI_Isend(void*data, int count, MPI_Datatype datatype, int dest, int tag,  MPI_Comm comm, LMPI_Request *request)`:
+	This metadata is later used by routines such as `LMPI_Isend`, `LMPI_Irecv`, and `LMPI_Free`. For example, the offset can be used to describe the buffer location relative to the shared-memory segment, while `LMPI_Free` can use the stored pool, offset, and size to determine which allocation should be released or whether the memory pool can safely be rolled back for reuse.
+
+* `int LMPI_Isend(LMPI_Allocation *, int count, MPI_Datatype datatype, int dest, int tag,  MPI_Comm comm, LMPI_Request *request)`:
 
 	It initiates a non-blocking send by creating a communication request and inserting it into the shared request queue managed by the LMPI runtime. The routine 	determines the memory offset of the user buffer within the shared send segment and embeds this information, along with metadata such as source, destination, tag, communicator, datatype, and count, into an `LMPI_Request` structure. This request is then marked as ready and pending, and enqueued into the shared queue.
 Once the request is submitted, `LMPI_Isend` returns immediately without performing any data transfer. The actual communication is handled asynchronously by 	the progress rank, which reads the request from the queue and executes the transfer either via direct memory copy for intra-node communication or via MPI 		operations for inter-node communication.
@@ -58,39 +66,77 @@ They provide non-blocking completion checks for previously issued communication 
 ### Minimal C Example (2 Processes)
 
 ```c
-#include <stdio.h>
-#include <lmpi.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<lmpi.h>
 
-int main(void){
-	LMPI_Init(NULL, NULL);
+#define COUNT 16
+#define TAG   100
+
+int main(int argc, char **argv){
 	int rank, size;
+	LMPI_Init(&argc, &argv);
 	LMPI_Comm_rank(LMPI_COMM_WORLD, &rank);
 	LMPI_Comm_size(LMPI_COMM_WORLD, &size);
 
-	LMPI_Request req;
-	int flag = 0;
+	if(size<2){
+		fprintf(stderr, "This example requires at least 2 ranks\n");
+		LMPI_Finalize();
+		return 1;
+	}
+	int src=0;
+	int dst=1;
 
-	if (rank == 0){
-			int *send_buf=(int*)LMPI_Register(1,LMPI_INT);
-        	*send_buf=42;
+	if(rank==src){
+		LMPI_Allocation sendbuf=LMPI_Malloc(LMPI_POOL_SEND, COUNT, LMPI_INT);
+		int *data=(int *)sendbuf.ptr;
+		for(int i= 0;i<COUNT;i++){
+			data[i]=i+ 10;
+		}
+		LMPI_Request req;
+		int flag=0;
+		printf("Rank %d sending data to rank %d\n", rank, dst);
 
-        	LMPI_Isend(send_buf, 1, LMPI_INT, 1, 0, LMPI_COMM_WORLD, &req);
-			/*can overlap with CPU computation here*/
-			LMPI_Wait(&req, &flag);
-	}else{
-        	int *recv_buf=NULL;
-        	LMPI_Irecv((void**)&recv_buf, 0, LMPI_INT, 0, 0, LMPI_COMM_WORLD, &req);
-        	/*can overlap with CPU computation here*/
-			LMPI_Wait(&req, &flag);
+		LMPI_Isend(&sendbuf,COUNT,LMPI_INT,dst,TAG,LMPI_COMM_WORLD,&req);
+		/*
+			can overlap with computation here
+		*/
+		LMPI_Waitall(1,&req,&flag);
 
-        	printf("Received value = %d\n", *recv_buf);
-    	}
+		printf("Rank %d send completed\n", rank);
+		LMPI_Free(&sendbuf);
+	
+	}
+	else if(rank==dst)
+	{
 
-	LMPI_Barrier(LMPI_COMM_WORLD);
-	LMPI_Finalize();
-	return 0;
+		LMPI_Allocation recvbuf=LMPI_Malloc(LMPI_POOL_RECV, COUNT, LMPI_INT);
+		int *data=(int *)recvbuf.ptr;
+		memset(data,0,COUNT*sizeof(int));
+		LMPI_Request req;
+		int flag=0;
+		printf("Rank %d receiving data from rank %d\n", rank, src);
+	
+		LMPI_Irecv(&recvbuf,COUNT,LMPI_INT,src,TAG,LMPI_COMM_WORLD,&req);
+		/*
+			can overlap with computation here
+		*/
+		LMPI_Waitall(1, &req, &flag);
+		printf("Rank %d received data:\n", rank);
+		for(int i=0;i<COUNT;i++){
+			printf("data[%d] = %d\n",i,data[i]);
+		}
+		LMPI_Free(&recvbuf);
+
 }
 
+LMPI_Barrier(LMPI_COMM_WORLD);
+
+LMPI_Finalize();
+
+return 0;
+}
 ```
 ---
 ## Build and Install
