@@ -12,10 +12,10 @@ long enqueue_request(LMPI_Request request){
         	for(long i=0;i<MAX_QUEUE_NUM;i++){
             		//if(shared_queue[i].valid==0 )
             		int expected=SLOT_EMPTY;
-			if(atomic_compare_exchange_strong_explicit( &shared_queue[i].valid, &expected, SLOT_RESERVED,memory_order_acq_rel, memory_order_relaxed)){
+					if(atomic_compare_exchange_strong_explicit( &shared_queue[i].valid, &expected, SLOT_RESERVED,memory_order_acq_rel, memory_order_relaxed)){
                 		MPI_Win_sync(shm_queue_win);
                 		shared_queue[i].world_src=request.world_src;
-				shared_queue[i].src=request.src;
+						shared_queue[i].src=request.src;
                 		shared_queue[i].dst=request.dst;
                 		shared_queue[i].tag=request.tag;
                 		shared_queue[i].datatype=request.datatype;
@@ -28,21 +28,20 @@ long enqueue_request(LMPI_Request request){
                 		shared_queue[i].request_id=request.request_id;
                 		shared_queue[i].local_rank=request.local_rank;
                 		shared_queue[i].remote_win_addr=request.remote_win_addr;
-				shared_queue[i].index=i;
-				index=i;
+						shared_queue[i].index=i;
+						index=i;
                 		MPI_Win_sync(shm_queue_win);
 
                 		atomic_store_explicit(&shared_queue[i].valid, SLOT_READY, memory_order_release);
                 		MPI_Win_sync(shm_queue_win);
                 		//debug_log("Worker %d  Wrting the request %lld in %d",rank,request.request_id,i);
                 		written=1;
-				break;
-            }
-        }
-    }
-    return index;
+						break;
+					}
+			}
+		}
+    	return index;
 }
-
 int LMPI_Show_queue(int rank){
 	printf("=== [Rank %d] Shared Queue State ===\n", rank);
     	for(int i= 0;i<MAX_QUEUE_NUM;i++) {
@@ -58,8 +57,8 @@ int LMPI_Show_queue(int rank){
                req->request_status,
                req->index,
                (unsigned long)req->request_id,req->corresponding_progress_rank);
-    }
-    fflush(stdout);
-    return LMPI_SUCCESS;
+    	}
+    	fflush(stdout);
+    	return LMPI_SUCCESS;
 }
 
