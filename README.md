@@ -45,7 +45,7 @@ Once the request is submitted, `LMPI_Isend` returns immediately without performi
 
 It posts a non-blocking receive request by registering the corresponding metadata in the shared request queue. Once the request is submitted, `LMPI_Irecv` returns immediately without performing any data transfer. The actual communication is handled asynchronously by the progress rank, which reads the request from the queue and executes the transfer either via direct memory copy for intra-node communication or via MPI send/recv for inter-node communication.
 
-### `LMPI_Wait(LMPI_Request *request,int *flag)` and `int LMPI_Waitall(int count, LMPI_Request array_of_requests[],int *flag)`:
+### `int LMPI_Wait(LMPI_Request *request,int *flag)` and `int LMPI_Waitall(int count, LMPI_Request array_of_requests[],int *flag)`:
 
 They are are the completion routines that ensure previously issued non-blocking operations have finished:
 * `LMPI_Wait` operates on a single `LMPI_Request`continuously checks the status of the corresponding request entry in the shared queue until the progress rank marks it as completed. Once completion is detected, the routine allows safe access to the associated buffer and can optionally update the provided flag.
@@ -61,7 +61,7 @@ They provide non-blocking completion checks for previously issued communication 
 Neither function performs communication or advances progress. They rely entirely on the progress rank, which asynchronously processes requests and updates their status. These routines simply query that state without blocking.
 
 
-### `LMPI_Finalize()`:
+### `int LMPI_Finalize()`:
  It shuts down the LMPI runtime, releases all resources initialized during `LMPI_Init`, and terminates the progress rank.
 
 ### `int LMPI_Comm_rank(LMPI_Comm comm, int*rank)`, `int LMPI_Comm_size(LMPI_Comm comm,int *size)`, `int LMPI_Barrier(LMPI_Comm comm)`,  and `int LMPI_Get_processor_name(char *name, int *resultlen)`:
