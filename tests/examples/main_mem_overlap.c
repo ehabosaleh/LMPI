@@ -105,7 +105,7 @@ int main(){
                     LMPI_Isend(&buffer_send, msg_size, MPI_CHAR, dst, count+iter+100, LMPI_COMM_WORLD, &request[0]);
                     LMPI_Irecv(&buffer_recv,msg_size,MPI_CHAR,dst,iter,LMPI_COMM_WORLD,&request[1]);	
 				
-				//LMPI_Wait( &request[0],&flag);
+					//LMPI_Wait( &request[0],&flag);
 				    LMPI_Waitall(2,request,&flag);
                     if(iter>100)
 				        total_comm_time+=MPI_Wtime()-start_time;
@@ -115,7 +115,7 @@ int main(){
 				    LMPI_Irecv(&buffer_recv,msg_size,MPI_CHAR,src,count+iter+100,LMPI_COMM_WORLD,&request[0]);
                     LMPI_Isend(&buffer_send, msg_size, MPI_CHAR,src, iter, LMPI_COMM_WORLD, &request[1]);
 				
-				//LMPI_Wait( &request[0],&flag);
+					//LMPI_Wait( &request[0],&flag);
 				    LMPI_Waitall(2,request,&flag);
 				
 				    if(iter>100)
