@@ -3,7 +3,7 @@ LMPI is a custom communication layer built on top of MPI, designed to provide pr
 
 ---
 
-## API
+## API (Version 2.0.0)
 Users can access all library functions declared in `lmpi.h`. Their signatures follow the standard MPI conventions as defined in the official MPI documentation, allowing existing MPI applications written with `mpi.h` to be adapted with minimal effort.
 
 The primary library functions are as follows:
@@ -18,9 +18,9 @@ It initializes the LMPI runtime by setting up a **proxy-based communication mode
 
 ### `LMPI_Allocation LMPI_Malloc(LMPI_PoolKind pool, int count, LMPI_Datatype datatype)`:
 
-This routine allocates a buffer from one of LMPI's internal memory pools. The target pool is selected through the `pool` argument, which can be either `LMPI_POOL_SEND` or `LMPI_POOL_RECV`. The allocated buffer size is computed as `count` multiplied by the size of `datatype`, as obtained from the corresponding LMPI/MPI datatype-size routine.
+This routine allocates a buffer from one of process's internal memory pools. The target pool is selected through the `pool` argument, which can be either `LMPI_POOL_SEND` or `LMPI_POOL_RECV`. The allocated buffer size is computed as `count` multiplied by the size of `datatype`, as obtained from the corresponding LMPI/MPI datatype-size routine.
 
-The function returns an object of type `LMPI_Allocation`, which stores both the allocated address and the metadata required to manage the allocation. This metadata typically includes:
+It returns an object of type `LMPI_Allocation`, which stores both the allocated address and the metadata required to manage the allocation. This metadata typically includes:
 * `ptr`: the base address of the allocated buffer.
 * `pool`: the memory pool from which the buffer was allocated, i.e., send or receive pool.
 * `offset`: the offset of the allocated buffer relative to the base address of the corresponding memory pool.
@@ -32,7 +32,7 @@ This metadata is later used by routines such as `LMPI_Isend`, `LMPI_Irecv`, and 
 
 This routine releases a previously allocated LMPI buffer and makes its memory region available for reuse. The allocation to be released is identified through the metadata stored in the `LMPI_Allocation` object, including the memory pool type, the buffer offset, and the allocation size.
 
-If LMPI uses a stack-based or bump-pointer allocator, `LMPI_Free` can safely reclaim memory only when allocations are freed in reverse order of allocation within the same pool. For example, if `buf1` is allocated before `buf2` from the same memory pool, then `buf2` must be freed before `buf1`. This allows the allocator to roll back the corresponding pool offset safely.
+`LMPI_Free` can safely reclaim memory only when allocations are freed in reverse order of allocation within the same pool. For example, if `buf1` is allocated before `buf2` from the same memory pool, then `buf2` must be freed before `buf1`. This allows the allocator to roll back the corresponding pool offset safely.
 
 ### `int LMPI_Isend(LMPI_Allocation *data, int count, LMPI_Datatype datatype, int dest, int tag,  LMPI_Comm comm, LMPI_Request *request)`:
 
