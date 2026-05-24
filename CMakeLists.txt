@@ -55,19 +55,19 @@ install(EXPORT lmpi_target
 
 write_basic_package_version_file(
 	LMPIConfigVersion.cmake
-    	VERSION ${PROJECT_VERSION}
-    	COMPATIBILITY SameMajorVersion
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
 	cmake/LMPIConfig.cmake.in
-    	LMPIConfig.cmake
-    	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lmpi
+    LMPIConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lmpi
 )
 
 install(FILES 
 	${CMAKE_CURRENT_BINARY_DIR}/LMPIConfig.cmake
-    	${CMAKE_CURRENT_BINARY_DIR}/LMPIConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/LMPIConfigVersion.cmake
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lmpi
 )
 
@@ -80,7 +80,7 @@ add_test(
     COMMAND
         ${MPIEXEC_EXECUTABLE}
         ${MPIEXEC_NUMPROC_FLAG} 4
-	${MPIEXEC_PREFLAGS} --oversubscribe
+		${MPIEXEC_PREFLAGS} --oversubscribe
         ${MPIEXEC_PREFLAGS}
         $<TARGET_FILE:basic_test>
         ${MPIEXEC_POSTFLAGS}
