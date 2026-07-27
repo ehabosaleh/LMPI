@@ -174,3 +174,18 @@ find_package(LMPI REQUIRED)
 target_link_libraries(app PRIVATE LMPI::LMPI)
 ```
 
+## Preferred citation 
+Experiments and results presented in the following paper:
+```bibtex
+@INPROCEEDINGS{11613056,
+  author={Saleh, Ehab and Raoofy, Amir and Mijakovic, Robert and Belbeisi, Ahmad Moh'd Saleh A. and Weidendorfer, Josef},
+  booktitle={2026 25th International Symposium on Parallel and Distributed Computing (ISPDC)}, 
+  title={A Dedicated CPU Core for MPI Progress: Towards Improved Overlap in Non-Blocking Two-Sided Communication}, 
+  year={2026},
+  volume={},
+  number={},
+  pages={1-10},
+  keywords={Ranking (statistics);Memory;Algorithms;Timing;Receivers;Bandwidth;Central Processing Unit;Tagging;Data transfer;Energy;HPC;MPI;Asynchronous Progress;Two-sided},
+  doi={10.1109/ISPDC69862.2026.00010}}
+
+
