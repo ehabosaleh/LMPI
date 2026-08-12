@@ -19,6 +19,13 @@ int LMPI_Isend(LMPI_Allocation *data, int count, MPI_Datatype datatype, int dest
 
 int LMPI_Irecv(LMPI_Allocation *data, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, LMPI_Request *request);
 
+int LMPI_Send(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm);
+int LMPI_Rsend(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm);
+int LMPI_Ssend(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm);
+int LMPI_Bsend(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm);
+int LMPI_Recv(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm, MPI_Status*status);
+
+
 LMPI_Allocation LMPI_Malloc(LMPI_PoolKind pool,int count,MPI_Datatype datatype);
 void LMPI_Free(LMPI_Allocation*alloc);
 

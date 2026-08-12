@@ -5,6 +5,27 @@
 #include"internal/lmpi_debug.h"
 #include "lmpi_constants.h"
 #include<time.h>
+
+int LMPI_Send(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm){
+ return MPI_Send(data->ptr,count, datatype,dest,tag,comm);
+}
+
+int LMPI_Rsend(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm){
+ return MPI_Rsend(data->ptr,count, datatype,dest,tag,comm);
+}
+int LMPI_Ssend(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm){
+ return MPI_Ssend(data->ptr,count, datatype,dest,tag,comm);
+}
+
+int LMPI_Bsend(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm){
+ return MPI_Bsend(data->ptr,count, datatype,dest,tag,comm);
+}
+
+int LMPI_Recv(LMPI_Allocation* data, int count, MPI_Datatype  datatype, int dest, int tag,  MPI_Comm comm, MPI_Status*status){
+
+    return MPI_Recv(data->ptr,count,datatype,dest, tag, comm, status);
+}
+
 int LMPI_Irecv(LMPI_Allocation *data, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, LMPI_Request *request){
 	if(data==NULL||data->ptr==NULL||request==NULL){
 		fprintf(stderr, "LMPI_Isend: invalid argument\n");
