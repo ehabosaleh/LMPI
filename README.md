@@ -67,9 +67,15 @@ Neither function performs communication or advances progress. They rely entirely
 ### `int LMPI_Comm_rank(LMPI_Comm comm, int*rank)`, `int LMPI_Comm_size(LMPI_Comm comm,int *size)`, `int LMPI_Barrier(LMPI_Comm comm)`,  and `int LMPI_Get_processor_name(char *name, int *resultlen)`:
 
 They work exactly as their corresponding calls in MPI. It is worth to mention that `LMPI_COMM_WORLD`, and all its sub-communicators, contain only the working 	rank. In other words, after calling `LMPI_Comm_size(LMPI_Comm comm, int *size)`, the returned `size` corresponds to the number of working ranks, which is equal to the total number of processes minus one (excluding the dedicated progress rank). 
+##  MPI Process Count
+LMPI reserves **one MPI rank per host** for communication progress. Launch `np = wr + n` MPI processes, where:
 
-### Minimal C Example (2 Processes)
+- `wr` is the total number of working ranks.
+- `n` is the number of hosts.
 
+For a single host, use `np = wr + 1`. For example, 4 working ranks require 5 MPI processes (`mpirun -np 5 ...`).
+
+## Minimal C Example (2 working ranks on the same host)
 ```c
 #include<stdio.h>
 #include<stdlib.h>
